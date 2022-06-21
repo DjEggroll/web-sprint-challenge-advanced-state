@@ -14,24 +14,47 @@ export function moveCounterClockwise() {
   })
  }
 
-export function selectAnswer() { }
+export function selectAnswer(value) {
+  return({
+    type: types.SET_SELECTED_ANSWER,
+    payload: value
+  })
+ }
 
-export function setMessage() { }
+export function setMessage(value) { 
+  return({
+    type: types.SET_INFO_MESSAGE,
+    payload: value
+  })
+}
 
-export function setQuiz() { }
+export function setQuiz(state) {
+  return({
+    type: types.SET_QUIZ_INTO_STATE,
+    payload: state
+  })
+ }
 
 export function inputChange() { }
 
 export function resetForm() { }
 
 // ❗ Async action creators
-export function fetchQuiz() {
-  return function (dispatch) {
-    // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
-    // On successful GET:
-    // - Dispatch an action to send the obtained quiz to its state
-  }
+export const fetchQuiz = () => (dispatch) => {
+  // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
+  // On successful GET:
+  // - Dispatch an action to send the obtained quiz to its state
+    // dispatch(setQuiz(null));
+      dispatch(setQuiz(null));
+      axios.get('http://localhost:9000/api/quiz/next')
+        .then(res => {
+          dispatch(setQuiz(res.data))
+        })
+        .catch(err => {
+          console.error(err)
+        });
 }
+ 
 export function postAnswer() {
   return function (dispatch) {
     // On successful POST:
