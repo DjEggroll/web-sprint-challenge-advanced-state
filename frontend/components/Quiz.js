@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from './../state/action-creators';
-import { fetchQuiz } from './../state/action-creators';
+
 
 
 export function Quiz(props) {
@@ -23,12 +23,23 @@ export function Quiz(props) {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     if(selectedAnswer === '1'){
-      props.setMessage('Nice job! That was the correct answer')
+      props.postAnswer({
+        'quiz_id': `${quiz.quiz_id}`,
+        'answer_id': `${quiz.answers[0].answer_id}`
+      })
     } else {
-      props.setMessage('What a shame! That was the incorrect answer')
+      props.postAnswer({
+        'quiz_id': `${quiz.quiz_id}`,
+        'answer_id': `${quiz.answers[1].answer_id}`
+      })
     }
-    props.fetchQuiz();
-    props.selectAnswer(null);
+    // if(selectedAnswer === '1'){
+    //   props.setMessage('Nice job! That was the correct answer')
+    // } else {
+    //   props.setMessage('What a shame! That was the incorrect answer')
+    // }
+    // props.fetchQuiz();
+    // props.selectAnswer(null);
   }
   
   return (
