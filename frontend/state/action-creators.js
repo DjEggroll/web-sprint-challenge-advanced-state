@@ -35,9 +35,18 @@ export function setQuiz(state) {
   })
  }
 
-export function inputChange() { }
+export function inputChange(state, id, value) {
+  return({
+    type:types.INPUT_CHANGE,
+    payload: {...state, [id]: value }
+  })
+ }
 
-export function resetForm() { }
+export function resetForm() {
+  return({
+    type: types.RESET_FORM
+  })
+ }
 
 // ❗ Async action creators
 export const fetchQuiz = () => (dispatch) => {
@@ -46,6 +55,7 @@ export const fetchQuiz = () => (dispatch) => {
   // - Dispatch an action to send the obtained quiz to its state
     // dispatch(setQuiz(null));
       dispatch(setQuiz(null));
+      console.log("WTF BRO");
       axios.get('http://localhost:9000/api/quiz/next')
         .then(res => {
           dispatch(setQuiz(res.data))
@@ -63,21 +73,29 @@ export function postAnswer(answer) {
     // - Dispatch the fetching of the next quiz
     axios.post('http://localhost:9000/api/quiz/answer', answer)
       .then(res => {
-        console.log(res)
+        // console.log(res)
         dispatch(selectAnswer(null));
         dispatch(setMessage(res.data.message));
         dispatch(fetchQuiz());
       })
       .catch(err => {
-        console.log(err)
+        // console.log(err)
         dispatch(selectAnswer(null));
         dispatch(setMessage(err.data.message));
         dispatch(fetchQuiz());
       })
   }
 }
-export function postQuiz() {
+export function postQuiz(formState) {
   return function (dispatch) {
+    axios.post('http://localhost:9000/api/quiz/new', formState)
+      .then(res => {
+        dispatch(setMessage(`Congrats: "${res.data.question}" is a great question!`));
+        dispatch(resetForm());
+      })
+      .catch(err => {
+        console.log(err)
+      })
     // On successful POST:
     // - Dispatch the correct message to the the appropriate state
     // - Dispatch the resetting of the form

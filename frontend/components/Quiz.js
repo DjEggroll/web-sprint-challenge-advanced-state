@@ -10,14 +10,15 @@ export function Quiz(props) {
   
 
   useEffect(() => {
-    props.fetchQuiz();
+    if(quiz === null){
+      props.fetchQuiz();
+    }
   }, []);
+
 
   const handleClick = (evt) => {
     props.selectAnswer(evt.target.value);
     props.setMessage('');
-    
-    
   }
 
   const handleSubmit = (evt) => {
